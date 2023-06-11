@@ -1,0 +1,16 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.cell {
+    border: 3px solid black;
+}
+
+
+.gameboard{
+    display: grid;
+    grid-template-columns: repeat(3 , 150px);
+    grid-template-rows: repeat(3 , 150px);
+}
