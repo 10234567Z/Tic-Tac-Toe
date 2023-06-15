@@ -16,6 +16,7 @@
     outline: none !important;
     border: 3px solid black;
     color: black;
+    font-size: xx-large;
 }
 
 .cell:nth-child(2),.cell:nth-child(1),.cell:nth-child(3){
