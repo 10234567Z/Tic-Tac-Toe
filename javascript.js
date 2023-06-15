@@ -12,9 +12,7 @@ function gameboard() {
     let getBoard = () => board;
 
     let cellAvailability = (column, row, value) => {
-        let cellsAvailable = board.filter(rows => rows[column].getValue() === '').map(rows => rows[column]);
-
-        if (!cellsAvailable.length) return;
+        if (board[row][column].getValue() !== '') return;
         board[row][column].addValue(value);
     }
 
@@ -89,7 +87,6 @@ function UIController() {
                 cellElement.textContent = cellValue.getValue();
                 cellElement.dataset.column = colIndex;
                 cellElement.dataset.row = rowIndex;
-                console.log(cellValue.getValue());
             }
             )
         }
