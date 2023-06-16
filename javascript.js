@@ -61,15 +61,19 @@ function gameController() {
     let playRound = (row, column) => {
         board.cellAvailability(column, row, getActivePlayer().value)
 
-        let rowsToCheck = []
-        let nonDiagonalRows = []
+        let horizontalCheck1 = []
+        let horizontalCheck2 = []
+        let horizontalCheck3 = []
+
+        let verticalCheck1 = []
+        let verticalCheck2 = []
+        let verticalCheck3 = []
 
         let diagonalRowT2L = []
         let diagonalRowT2R = []
 
         for(i = 0; i < 3; i++){
             let row = []
-            let nonDiagonalRow = []
             for(j = 0;j < 3;j++){
                 row.push(board.getBoard()[i][j].getValue())
                 if(i === j){
@@ -78,19 +82,27 @@ function gameController() {
                 if(i === 3 - j - 1){
                     diagonalRowT2L.push(board.getBoard()[i][j].getValue())
                 }
-                nonDiagonalRow.push(board.getBoard()[i][j].getValue())
+                if(i === 0){
+                    horizontalCheck1.push(board.getBoard()[i][j].getValue())
+                }
+                if(i === 1){
+                    horizontalCheck2.push(board.getBoard()[i][j].getValue())
+                }
+                if(i === 2){
+                    horizontalCheck3.push(board.getBoard()[i][j].getValue())
+                }
+                if(j === 0){
+                    verticalCheck1.push(board.getBoard()[i][j].getValue())
+                }
+                if(j === 1){
+                    verticalCheck2.push(board.getBoard()[i][j].getValue())
+                }
+                if(j === 2){
+                    verticalCheck3.push(board.getBoard()[i][j].getValue())
+                }
             }
-
-            rowsToCheck.push(row);
-            nonDiagonalRows.push(nonDiagonalRow);
         }
-
-        let diagonalT2LCheck = diagonalRowT2L.every(n => n === diagonalRowT2L[0] && diagonalRowT2L[0] !== '');
-        let diagonalT2RCheck = diagonalRowT2R.every(n => n === diagonalRowT2R[0] && diagonalRowT2R[0] !== '');
-
-        if(diagonalT2LCheck || diagonalT2RCheck){
-            console.log(getActivePlayer().value + ' won');
-        }
+        // console.log(`${verticalCheck3}`)
         switchTurn();
     }
 
