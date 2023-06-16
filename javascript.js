@@ -1,7 +1,7 @@
 function gameboard() {
     let rows = 3,
-        columns = 3;
-    board = [];
+        columns = 3,
+        board = [];
 
     for (i = 0; i < rows; i++) {
         board[i] = []
@@ -60,6 +60,32 @@ function gameController() {
 
     let playRound = (row, column) => {
         board.cellAvailability(column, row, getActivePlayer().value)
+
+        let rowsToCheck = []
+        let nonDiagonalRows = []
+
+        let diagonalRowT2L = []
+        let diagonalRowT2R = []
+
+        for(i = 0; i < 3; i++){
+            let row = []
+            let nonDiagonalRow = []
+            for(j = 0;j < 3;j++){
+                row.push(board.getBoard()[i][j].getValue())
+                if(i === j){
+                    diagonalRowT2R.push(board.getBoard()[i][j].getValue())
+                }
+                if(i === 3 - j - 1){
+                    diagonalRowT2L.push(board.getBoard()[i][j].getValue())
+                }
+                nonDiagonalRow.push(board.getBoard()[i][j].getValue())
+            }
+
+            rowsToCheck.push(row);
+            nonDiagonalRows.push(nonDiagonalRow);
+        }
+
+        console.log(`Rows to check: ${rowsToCheck}`)
         switchTurn();
     }
 
@@ -82,7 +108,7 @@ function UIController() {
         board.forEach((row, rowIndex) => {
             row.forEach((cellValue, colIndex) => {
                 let cellElement = document.createElement('button');
-                cellElement.classList.add('cell');
+                cellElement.classList.add(`cell`);
                 boardElement.appendChild(cellElement);
                 cellElement.textContent = cellValue.getValue();
                 cellElement.dataset.column = colIndex;
@@ -107,3 +133,6 @@ function UIController() {
 }
 
 UIController();
+
+
+/**  */
