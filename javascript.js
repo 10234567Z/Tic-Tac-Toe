@@ -15,12 +15,7 @@ function gameboard() {
         if (board[row][column].getValue() !== '') return;
         board[row][column].addValue(value);
     }
-
-    let printBoard = () => {
-        let boardWithValues = board.map((rows) => rows.map((cell) => cell.getValue()))
-    }
-
-    return { getBoard, printBoard, cellAvailability }
+    return { getBoard, cellAvailability }
 }
 
 
@@ -121,11 +116,14 @@ function gameController() {
                 break;
             }
         }
+
+        if(winCheck){
+            let winningMessage = document.createElement('div')
+            winningMessage.classList.add('winnerMessage');
+            document.querySelector('body').appendChild(winningMessage);
+        }
         switchTurn();
     }
-
-    board.printBoard();
-
     return {
         getActivePlayer,
         playRound,
@@ -166,8 +164,4 @@ function UIController() {
 
     updateScreen();
 }
-
 UIController();
-
-
-/**  */
