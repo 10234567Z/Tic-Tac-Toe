@@ -72,37 +72,55 @@ function gameController() {
         let diagonalRowT2L = []
         let diagonalRowT2R = []
 
-        for(i = 0; i < 3; i++){
+        for (i = 0; i < 3; i++) {
             let row = []
-            for(j = 0;j < 3;j++){
+            for (j = 0; j < 3; j++) {
                 row.push(board.getBoard()[i][j].getValue())
-                if(i === j){
+                if (i === j) {
                     diagonalRowT2R.push(board.getBoard()[i][j].getValue())
                 }
-                if(i === 3 - j - 1){
+                if (i === 3 - j - 1) {
                     diagonalRowT2L.push(board.getBoard()[i][j].getValue())
                 }
-                if(i === 0){
+                if (i === 0) {
                     horizontalCheck1.push(board.getBoard()[i][j].getValue())
                 }
-                if(i === 1){
+                if (i === 1) {
                     horizontalCheck2.push(board.getBoard()[i][j].getValue())
                 }
-                if(i === 2){
+                if (i === 2) {
                     horizontalCheck3.push(board.getBoard()[i][j].getValue())
                 }
-                if(j === 0){
+                if (j === 0) {
                     verticalCheck1.push(board.getBoard()[i][j].getValue())
                 }
-                if(j === 1){
+                if (j === 1) {
                     verticalCheck2.push(board.getBoard()[i][j].getValue())
                 }
-                if(j === 2){
+                if (j === 2) {
                     verticalCheck3.push(board.getBoard()[i][j].getValue())
                 }
             }
         }
-        // console.log(`${verticalCheck3}`)
+
+        let allChecks = [];
+        allChecks.push(horizontalCheck1,
+            horizontalCheck2,
+            horizontalCheck3,
+            verticalCheck1,
+            verticalCheck2,
+            verticalCheck3,
+            diagonalRowT2L,
+            diagonalRowT2R
+        );
+
+        let winCheck = false;
+        for (let i = 0; i < allChecks.length; i++) {
+            if (allChecks[i][0] !== '' && allChecks[i].every(val => val === allChecks[i][0])) {
+                winCheck = true;
+                break;
+            }
+        }
         switchTurn();
     }
 
