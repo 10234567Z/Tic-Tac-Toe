@@ -85,7 +85,12 @@ function gameController() {
             nonDiagonalRows.push(nonDiagonalRow);
         }
 
-        console.log(`Rows to check: ${rowsToCheck}`)
+        let diagonalT2LCheck = diagonalRowT2L.every(n => n === diagonalRowT2L[0] && diagonalRowT2L[0] !== '');
+        let diagonalT2RCheck = diagonalRowT2R.every(n => n === diagonalRowT2R[0] && diagonalRowT2R[0] !== '');
+
+        if(diagonalT2LCheck || diagonalT2RCheck){
+            console.log(getActivePlayer().value + ' won');
+        }
         switchTurn();
     }
 
