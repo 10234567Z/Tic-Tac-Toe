@@ -121,6 +121,7 @@ function gameController() {
             let winningMessage = document.createElement('div')
             winningMessage.classList.add('winnerMessage');
             document.querySelector('body').appendChild(winningMessage);
+            winningMessage.textContent = `${getActivePlayer().value} won`
         }
         switchTurn();
     }
