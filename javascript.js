@@ -33,14 +33,19 @@ function cell() {
     return { addValue, getValue };
 }
 
-function gameController() {
+function gameController(
+    playerOneName = prompt('Type the 1st Player name Here' , ''),
+    playerTwoName = prompt('Type the 2nd Player name Here' , '')
+) {
     let board = gameboard();
 
     let players = [
         {
+            name: playerOneName,
             value: 'X'
         },
         {
+            name: playerTwoName,
             value: 'O'
         }
     ]
@@ -60,7 +65,6 @@ function gameController() {
                 cell.addValue('')
             });
         });
-        board = gameboard();
         activePlayer = players[0];
         winCheck = false;
     }
@@ -138,7 +142,7 @@ function gameController() {
             let winningMessage = document.createElement('div')
             winningMessage.classList.add('winnerMessage');
             document.querySelector('body').appendChild(winningMessage);
-            winningMessage.textContent = `${getActivePlayer().value} won`
+            winningMessage.textContent = `${getActivePlayer().name} won`
             console.log('won')
         }
         switchTurn();
@@ -173,6 +177,7 @@ function UIController() {
     boardElement.addEventListener('click', e => {
         let selectedColumn = e.target.dataset.column;
         let selectedRow = e.target.dataset.row;
+        console.log('clicked')
 
         if (!selectedColumn || !selectedRow) return;
 
