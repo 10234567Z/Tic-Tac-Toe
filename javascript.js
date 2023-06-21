@@ -1,7 +1,8 @@
 function gameboard() {
     let rows = 3,
         columns = 3,
-        board = [];
+        board = [],
+        cellsAvailable = true;
 
     for (i = 0; i < rows; i++) {
         board[i] = []
@@ -12,10 +13,13 @@ function gameboard() {
     let getBoard = () => board;
 
     let cellAvailability = (column, row, value) => {
-        if (board[row][column].getValue() !== '') return;
+        if (board[row][column].getValue() !== '')return;
         board[row][column].addValue(value);
     }
-    return { getBoard, cellAvailability }
+    return {
+        getBoard,
+        cellAvailability
+    }
 }
 
 
@@ -34,8 +38,8 @@ function cell() {
 }
 
 function gameController(
-    playerOneName = prompt('Type the 1st Player name Here' , ''),
-    playerTwoName = prompt('Type the 2nd Player name Here' , '')
+    playerOneName = prompt('Type the 1st Player name Here', ''),
+    playerTwoName = prompt('Type the 2nd Player name Here', '')
 ) {
     let board = gameboard();
 
@@ -133,7 +137,6 @@ function gameController(
                 break;
             }
         }
-
         if (winCheck === true) {
             let existingWinnerMessage = document.querySelector('.winnerMessage');
             if (existingWinnerMessage) {
@@ -147,7 +150,9 @@ function gameController(
         }
         switchTurn();
     }
+    let getWinCheck = () => winCheck;
     return {
+        getWinCheck,
         resetGame,
         getActivePlayer,
         playRound,
@@ -159,6 +164,7 @@ function UIController() {
     let game = gameController();
 
     let updateScreen = () => {
+        let cellsAvailable = 0;
         let board = game.getBoard();
         boardElement.textContent = '';
         board.forEach((row, rowIndex) => {
@@ -169,10 +175,18 @@ function UIController() {
                 cellElement.textContent = cellValue.getValue();
                 cellElement.dataset.column = colIndex;
                 cellElement.dataset.row = rowIndex;
+                if(cellValue.getValue() === ''){
+                    cellsAvailable++;
+                }
             }
             )
         }
         )
+        console.log(game.getWinCheck());
+        console.log(cellsAvailable)
+        if(game.getWinCheck() === false && cellsAvailable === 0){
+            console.log('draw');
+        }
     }
     boardElement.addEventListener('click', e => {
         let selectedColumn = e.target.dataset.column;
