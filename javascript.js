@@ -53,6 +53,21 @@ function gameController() {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
     }
 
+
+    let resetGame = () => {
+        board.getBoard().forEach(row => {
+            row.forEach(cell => {
+                cell.addValue('')
+            });
+        });
+        board = gameboard();
+        activePlayer = players[0];
+        winCheck = false;
+    }
+
+
+    let winCheck = false;
+
     let playRound = (row, column) => {
         board.cellAvailability(column, row, getActivePlayer().value)
 
@@ -108,8 +123,6 @@ function gameController() {
             diagonalRowT2L,
             diagonalRowT2R
         );
-
-        let winCheck = false;
         for (let i = 0; i < allChecks.length; i++) {
             if (allChecks[i][0] !== '' && allChecks[i].every(val => val === allChecks[i][0])) {
                 winCheck = true;
@@ -117,21 +130,26 @@ function gameController() {
             }
         }
 
-        if(winCheck){
+        if (winCheck === true) {
+            let existingWinnerMessage = document.querySelector('.winnerMessage');
+            if (existingWinnerMessage) {
+                existingWinnerMessage.remove();
+            }
             let winningMessage = document.createElement('div')
             winningMessage.classList.add('winnerMessage');
             document.querySelector('body').appendChild(winningMessage);
             winningMessage.textContent = `${getActivePlayer().value} won`
+            console.log('won')
         }
         switchTurn();
     }
     return {
+        resetGame,
         getActivePlayer,
         playRound,
         getBoard: board.getBoard
     }
 }
-
 function UIController() {
     let boardElement = document.querySelector('.gameboard');
     let game = gameController();
@@ -152,7 +170,6 @@ function UIController() {
         }
         )
     }
-
     boardElement.addEventListener('click', e => {
         let selectedColumn = e.target.dataset.column;
         let selectedRow = e.target.dataset.row;
@@ -163,6 +180,15 @@ function UIController() {
         updateScreen();
     })
 
+    document.addEventListener('click', function clickHandler(e) {
+        if (e.target.classList.contains('winnerMessage')) {
+            e.target.remove();
+            game.resetGame();
+            updateScreen();
+        }
+    })
     updateScreen();
 }
+
+
 UIController();
