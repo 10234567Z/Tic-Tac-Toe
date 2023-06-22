@@ -248,6 +248,10 @@ function UIController() {
             game.resetGame();
             updateScreen();
         }
+        if(e.target.classList.contains('restart')){
+            game.resetGame();
+            updateScreen();
+        }
     })
     updateScreen();
 }
