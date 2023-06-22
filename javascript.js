@@ -14,7 +14,7 @@ function gameboard() {
 
     /** in the 2d Board , check if the cells are available. If not , return */
     let cellAvailability = (column, row, value) => {
-        if (board[row][column].getValue() !== '')return;
+        if (board[row][column].getValue() !== '') return;
         board[row][column].addValue(value);
     }
 
@@ -44,143 +44,150 @@ function gameController(
     playerOneName = prompt('Type the 1st Player name Here', ''),
     playerTwoName = prompt('Type the 2nd Player name Here', '')
 ) {
-    let board = gameboard();
 
-    let players = [
-        {
-            name: playerOneName,
-            value: 'X'
-        },
-        {
-            name: playerTwoName,
-            value: 'O'
+    /** If the names are valid continue , if not then reload */
+    if (playerOneName.trim() !== '' || playerTwoName.trim() !== '') {
+        let board = gameboard();
+
+        let players = [
+            {
+                name: playerOneName,
+                value: 'X'
+            },
+            {
+                name: playerTwoName,
+                value: 'O'
+            }
+        ]
+
+        /** Start from 1st player */
+        let activePlayer = players[0];
+
+        let getActivePlayer = () => activePlayer;
+
+        /** Switch player in between */
+        let switchTurn = () => {
+            activePlayer = activePlayer === players[0] ? players[1] : players[0];
         }
-    ]
-
-    /** Start from 1st player */
-    let activePlayer = players[0];
-
-    let getActivePlayer = () => activePlayer;
-
-    /** Switch player in between */
-    let switchTurn = () => {
-        activePlayer = activePlayer === players[0] ? players[1] : players[0];
-    }
 
 
-    /** Reset whole game i.e board cell values , active player and other bools */
-    let resetGame = () => {
-        board.getBoard().forEach(row => {
-            row.forEach(cell => {
-                cell.addValue('')
+        /** Reset whole game i.e board cell values , active player and other bools */
+        let resetGame = () => {
+            board.getBoard().forEach(row => {
+                row.forEach(cell => {
+                    cell.addValue('')
+                });
             });
-        });
-        activePlayer = players[0];
-        winCheck = false;
+            activePlayer = players[0];
+            winCheck = false;
+        }
+
+
+        let winCheck = false;
+
+        /** Handles all the operation during round play */
+        let playRound = (row, column) => {
+            board.cellAvailability(column, row, getActivePlayer().value)
+
+            let horizontalCheck1 = []
+            let horizontalCheck2 = []
+            let horizontalCheck3 = []
+
+            let verticalCheck1 = []
+            let verticalCheck2 = []
+            let verticalCheck3 = []
+
+            let diagonalRowT2L = []
+            let diagonalRowT2R = []
+
+            for (i = 0; i < 3; i++) {
+                for (j = 0; j < 3; j++) {
+                    /** If rows and columns are same its diagonal is top left to right , like 1,1 ; 2,2 would all be next to each other diagonally */
+                    if (i === j) {
+                        diagonalRowT2R.push(board.getBoard()[i][j].getValue())
+                    }
+                    /** (-1 is only for it to not go more than 2 i.e highest index) 
+                     *  0  1  2
+                     * |     ij| 0
+                     * |   ij  | 1
+                     * |ij_____| 2
+                     * in this above diagram i can be said as 3 - j - 1
+                     */
+                    if (i === 3 - j - 1) {
+                        diagonalRowT2L.push(board.getBoard()[i][j].getValue())
+                    }
+
+                    /** Next 3 if satements check on the different row indexes and horizontals indexes by checking all 3 rows individually */
+                    if (i === 0) {
+                        horizontalCheck1.push(board.getBoard()[i][j].getValue())
+                    }
+                    if (i === 1) {
+                        horizontalCheck2.push(board.getBoard()[i][j].getValue())
+                    }
+                    if (i === 2) {
+                        horizontalCheck3.push(board.getBoard()[i][j].getValue())
+                    }
+
+                    /** Next 3 if satements check on the different col indexes and vertical indexes by checking all 3 cols individually */
+                    if (j === 0) {
+                        verticalCheck1.push(board.getBoard()[i][j].getValue())
+                    }
+                    if (j === 1) {
+                        verticalCheck2.push(board.getBoard()[i][j].getValue())
+                    }
+                    if (j === 2) {
+                        verticalCheck3.push(board.getBoard()[i][j].getValue())
+                    }
+                }
+            }
+
+            /** Push all the checksinside a single array */
+            let allChecks = [];
+            allChecks.push(horizontalCheck1,
+                horizontalCheck2,
+                horizontalCheck3,
+                verticalCheck1,
+                verticalCheck2,
+                verticalCheck3,
+                diagonalRowT2L,
+                diagonalRowT2R
+            );
+
+            /** Checks allCheck array */
+            for (let i = 0; i < allChecks.length; i++) {
+
+                /** Sees if any of the 3 consequentive row check is same other than being empty same, if there is then return wincheck as true */
+                if (allChecks[i][0] !== '' && allChecks[i].every(val => val === allChecks[i][0])) {
+                    winCheck = true;
+                    break;
+                }
+            }
+
+            /** Perform a paapppappaa celebration div upon winning */
+            if (winCheck === true) {
+                let existingWinnerMessage = document.querySelector('.winnerMessage');
+                if (existingWinnerMessage) {
+                    existingWinnerMessage.remove();
+                }
+                let winningMessage = document.createElement('div')
+                winningMessage.classList.add('winnerMessage');
+                document.querySelector('body').appendChild(winningMessage);
+                winningMessage.textContent = `${getActivePlayer().name} won`
+            }
+            switchTurn();
+        }
+        let getWinCheck = () => winCheck;
+        return {
+            getWinCheck,
+            resetGame,
+            getActivePlayer,
+            playRound,
+            getBoard: board.getBoard
+        }
     }
-
-
-    let winCheck = false;
-
-    /** Handles all the operation during round play */
-    let playRound = (row, column) => {
-        board.cellAvailability(column, row, getActivePlayer().value)
-
-        let horizontalCheck1 = []
-        let horizontalCheck2 = []
-        let horizontalCheck3 = []
-
-        let verticalCheck1 = []
-        let verticalCheck2 = []
-        let verticalCheck3 = []
-
-        let diagonalRowT2L = []
-        let diagonalRowT2R = []
-
-        for (i = 0; i < 3; i++) {
-            for (j = 0; j < 3; j++) {
-                /** If rows and columns are same its diagonal is top left to right , like 1,1 ; 2,2 would all be next to each other diagonally */
-                if (i === j) {
-                    diagonalRowT2R.push(board.getBoard()[i][j].getValue())
-                }
-                /** (-1 is only for it to not go more than 2 i.e highest index) 
-                 *  0  1  2
-                 * |     ij| 0
-                 * |   ij  | 1
-                 * |ij_____| 2
-                 * in this above diagram i can be said as 3 - j
-                 */
-                if (i === 3 - j - 1) {
-                    diagonalRowT2L.push(board.getBoard()[i][j].getValue())
-                }
-
-                /** Next 3 if satements check on the different row indexes and horizontals indexes by checking all 3 rows individually */
-                if (i === 0) {
-                    horizontalCheck1.push(board.getBoard()[i][j].getValue())
-                }
-                if (i === 1) {
-                    horizontalCheck2.push(board.getBoard()[i][j].getValue())
-                }
-                if (i === 2) {
-                    horizontalCheck3.push(board.getBoard()[i][j].getValue())
-                }
-
-                /** Next 3 if satements check on the different col indexes and vertical indexes by checking all 3 cols individually */
-                if (j === 0) {
-                    verticalCheck1.push(board.getBoard()[i][j].getValue())
-                }
-                if (j === 1) {
-                    verticalCheck2.push(board.getBoard()[i][j].getValue())
-                }
-                if (j === 2) {
-                    verticalCheck3.push(board.getBoard()[i][j].getValue())
-                }
-            }
-        }
-
-        /** Push all the checksinside a single array */
-        let allChecks = [];
-        allChecks.push(horizontalCheck1,
-            horizontalCheck2,
-            horizontalCheck3,
-            verticalCheck1,
-            verticalCheck2,
-            verticalCheck3,
-            diagonalRowT2L,
-            diagonalRowT2R
-        );
-
-        /** Checks allCheck array */
-        for (let i = 0; i < allChecks.length; i++) {
-
-            /** Sees if any of the 3 consequentive row check is same other than being empty same, if there is then return wincheck as true */
-            if (allChecks[i][0] !== '' && allChecks[i].every(val => val === allChecks[i][0])) {
-                winCheck = true;
-                break;
-            }
-        }
-
-        /** Perform a paapppappaa celebration div upon winning */
-        if (winCheck === true) {
-            let existingWinnerMessage = document.querySelector('.winnerMessage');
-            if (existingWinnerMessage) {
-                existingWinnerMessage.remove();
-            }
-            let winningMessage = document.createElement('div')
-            winningMessage.classList.add('winnerMessage');
-            document.querySelector('body').appendChild(winningMessage);
-            winningMessage.textContent = `${getActivePlayer().name} won`
-            console.log('won')
-        }
-        switchTurn();
-    }
-    let getWinCheck = () => winCheck;
-    return {
-        getWinCheck,
-        resetGame,
-        getActivePlayer,
-        playRound,
-        getBoard: board.getBoard
+    else{
+        alert('Invalid Input')
+        location.reload();
     }
 }
 function UIController() {
@@ -201,7 +208,7 @@ function UIController() {
                 cellElement.textContent = cellValue.getValue();
                 cellElement.dataset.column = colIndex;
                 cellElement.dataset.row = rowIndex;
-                if(cellValue.getValue() === ''){
+                if (cellValue.getValue() === '') {
                     cellsAvailable++;
                 }
             }
@@ -210,7 +217,7 @@ function UIController() {
         )
 
         /** This is to handle the game if it draws */
-        if(game.getWinCheck() === false && cellsAvailable === 0){
+        if (game.getWinCheck() === false && cellsAvailable === 0) {
             let existingWinnerMessage = document.querySelector('.winnerMessage');
             if (existingWinnerMessage) {
                 existingWinnerMessage.remove();
