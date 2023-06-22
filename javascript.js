@@ -3,7 +3,7 @@ function gameboard() {
         columns = 3,
         board = [],
         cellsAvailable = true;
-
+    /** Make a 2d Console Board */
     for (i = 0; i < rows; i++) {
         board[i] = []
         for (h = 0; h < columns; h++) {
@@ -12,10 +12,12 @@ function gameboard() {
     }
     let getBoard = () => board;
 
+    /** in the 2d Board , check if the cells are available. If not , return */
     let cellAvailability = (column, row, value) => {
         if (board[row][column].getValue() !== '')return;
         board[row][column].addValue(value);
     }
+
     return {
         getBoard,
         cellAvailability
@@ -26,6 +28,7 @@ function gameboard() {
 function cell() {
     let value = '';
 
+    /** Assign value of current player */
     let addValue = (player) => {
         value = player;
     }
@@ -54,15 +57,18 @@ function gameController(
         }
     ]
 
+    /** Start from 1st player */
     let activePlayer = players[0];
 
     let getActivePlayer = () => activePlayer;
 
+    /** Switch player in between */
     let switchTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
     }
 
 
+    /** Reset whole game i.e board cell values , active player and other bools */
     let resetGame = () => {
         board.getBoard().forEach(row => {
             row.forEach(cell => {
@@ -76,6 +82,7 @@ function gameController(
 
     let winCheck = false;
 
+    /** Handles all the operation during round play */
     let playRound = (row, column) => {
         board.cellAvailability(column, row, getActivePlayer().value)
 
@@ -91,15 +98,23 @@ function gameController(
         let diagonalRowT2R = []
 
         for (i = 0; i < 3; i++) {
-            let row = []
             for (j = 0; j < 3; j++) {
-                row.push(board.getBoard()[i][j].getValue())
+                /** If rows and columns are same its diagonal is top left to right , like 1,1 ; 2,2 would all be next to each other diagonally */
                 if (i === j) {
                     diagonalRowT2R.push(board.getBoard()[i][j].getValue())
                 }
+                /** (-1 is only for it to not go more than 2 i.e highest index) 
+                 *  0  1  2
+                 * |     ij| 0
+                 * |   ij  | 1
+                 * |ij_____| 2
+                 * in this above diagram i can be said as 3 - j
+                 */
                 if (i === 3 - j - 1) {
                     diagonalRowT2L.push(board.getBoard()[i][j].getValue())
                 }
+
+                /** Next 3 if satements check on the different row indexes and horizontals indexes by checking all 3 rows individually */
                 if (i === 0) {
                     horizontalCheck1.push(board.getBoard()[i][j].getValue())
                 }
@@ -109,6 +124,8 @@ function gameController(
                 if (i === 2) {
                     horizontalCheck3.push(board.getBoard()[i][j].getValue())
                 }
+
+                /** Next 3 if satements check on the different col indexes and vertical indexes by checking all 3 cols individually */
                 if (j === 0) {
                     verticalCheck1.push(board.getBoard()[i][j].getValue())
                 }
@@ -121,6 +138,7 @@ function gameController(
             }
         }
 
+        /** Push all the checksinside a single array */
         let allChecks = [];
         allChecks.push(horizontalCheck1,
             horizontalCheck2,
@@ -131,12 +149,18 @@ function gameController(
             diagonalRowT2L,
             diagonalRowT2R
         );
+
+        /** Checks allCheck array */
         for (let i = 0; i < allChecks.length; i++) {
+
+            /** Sees if any of the 3 consequentive row check is same other than being empty same, if there is then return wincheck as true */
             if (allChecks[i][0] !== '' && allChecks[i].every(val => val === allChecks[i][0])) {
                 winCheck = true;
                 break;
             }
         }
+
+        /** Perform a paapppappaa celebration div upon winning */
         if (winCheck === true) {
             let existingWinnerMessage = document.querySelector('.winnerMessage');
             if (existingWinnerMessage) {
@@ -164,6 +188,8 @@ function UIController() {
     let game = gameController();
 
     let updateScreen = () => {
+
+        /** Just printing a board and taking values from 2d board */
         let cellsAvailable = 0;
         let board = game.getBoard();
         boardElement.textContent = '';
@@ -182,12 +208,21 @@ function UIController() {
             )
         }
         )
-        console.log(game.getWinCheck());
-        console.log(cellsAvailable)
+
+        /** This is to handle the game if it draws */
         if(game.getWinCheck() === false && cellsAvailable === 0){
-            console.log('draw');
+            let existingWinnerMessage = document.querySelector('.winnerMessage');
+            if (existingWinnerMessage) {
+                existingWinnerMessage.remove();
+            }
+            let winningMessage = document.createElement('div')
+            winningMessage.classList.add('winnerMessage');
+            document.querySelector('body').appendChild(winningMessage);
+            winningMessage.textContent = `Its a draw!`
         }
     }
+
+    /** Cell button handles , adds values in UI of cell */
     boardElement.addEventListener('click', e => {
         let selectedColumn = e.target.dataset.column;
         let selectedRow = e.target.dataset.row;
@@ -199,6 +234,7 @@ function UIController() {
         updateScreen();
     })
 
+    /** When clicked anywhere on winner message div , it resets game */
     document.addEventListener('click', function clickHandler(e) {
         if (e.target.classList.contains('winnerMessage')) {
             e.target.remove();
