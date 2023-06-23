@@ -40,11 +40,7 @@ function cell() {
     return { addValue, getValue };
 }
 
-function gameController(
-    playerOneName = prompt('Type the 1st Player name Here', ''),
-    playerTwoName = prompt('Type the 2nd Player name Here', '')
-) {
-
+function gameController(playerOneName , playerTwoName) {
     /** If the names are valid continue , if not then reload */
     if (playerOneName.trim() !== '' || playerTwoName.trim() !== '') {
         let board = gameboard();
@@ -163,7 +159,7 @@ function gameController(
                 }
             }
 
-            /** Perform a paapppappaa celebration div upon winning */
+            /** Perform a woohoo! celebration div upon winning */
             if (winCheck === true) {
                 let existingWinnerMessage = document.querySelector('.winnerMessage');
                 if (existingWinnerMessage) {
@@ -191,8 +187,10 @@ function gameController(
     }
 }
 function UIController() {
-    let boardElement = document.querySelector('.gameboard');
-    let game = gameController();
+    let boardElement = document.querySelector('.gameboard')
+    let playerOneName = prompt('Type the 1st Player name Here', '')
+    let playerTwoName = prompt('Type the 2nd Player name Here', '');
+    let game = gameController(playerOneName,playerTwoName);
 
     let updateScreen = () => {
 
@@ -241,18 +239,30 @@ function UIController() {
         updateScreen();
     })
 
-    /** When clicked anywhere on winner message div , it resets game */
+    /** When clicked anywhere on winner message div or other specified buttons , it resets game */
     document.addEventListener('click', function clickHandler(e) {
         if (e.target.classList.contains('winnerMessage')) {
             e.target.remove();
             game.resetGame();
             updateScreen();
         }
-        if(e.target.classList.contains('restart')){
+        /** Additionally gives option to change name with resets */
+        if(e.target.classList.contains('restart') || e.target.classList.contains('computer') || e.target.classList.contains('human')){
             game.resetGame();
             updateScreen();
+            playerOneName = '';
+            playerTwoName = '';
+            playerOneName = prompt('Type the 1st Player name Here', '')
+            playerTwoName = prompt('Type the 2nd Player name Here', '')
+            if(playerOneName.trim() === '' || playerTwoName.trim() === ''){
+                alert('Invalid Input')
+                location.reload()
+            }
         }
     })
+
+
+
     updateScreen();
 }
 
