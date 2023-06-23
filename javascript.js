@@ -247,9 +247,8 @@ function UIController() {
             updateScreen();
         }
         /** Additionally gives option to change name with resets */
-        if(e.target.classList.contains('restart') || e.target.classList.contains('computer') || e.target.classList.contains('human')){
+        if(e.target.classList.contains('restart') || e.target.classList.contains('human')){
             game.resetGame();
-            updateScreen();
             playerOneName = '';
             playerTwoName = '';
             playerOneName = prompt('Type the 1st Player name Here', '')
@@ -258,10 +257,25 @@ function UIController() {
                 alert('Invalid Input')
                 location.reload()
             }
+            game = gameController(playerOneName,playerTwoName)
+            updateScreen();
         }
     })
 
-
+    /** Handles names reset upon click of computer button */
+    document.querySelector('.computer').addEventListener('click' , () => {
+        game.resetGame();
+        playerOneName = '';
+        playerTwoName = 'Computer';
+        playerOneName = prompt('Type the 1st Player name Here', '')
+        if(playerOneName.trim() === ''){
+            alert('Invalid Input')
+            location.reload()
+        }
+        game = gameController(playerOneName,playerTwoName)
+        updateScreen();
+    })
+    
 
     updateScreen();
 }
