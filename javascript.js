@@ -40,7 +40,7 @@ function cell() {
     return { addValue, getValue };
 }
 
-function gameController(playerOneName , playerTwoName) {
+function gameController(playerOneName, playerTwoName) {
     /** If the names are valid continue , if not then reload */
     if (playerOneName.trim() !== '' && playerTwoName.trim() !== '' && playerOneName !== playerTwoName) {
         let board = gameboard();
@@ -181,7 +181,7 @@ function gameController(playerOneName , playerTwoName) {
             getBoard: board.getBoard
         }
     }
-    else{
+    else {
         alert('Same or empty names for both players is not acceptable.')
         location.reload();
     }
@@ -190,7 +190,8 @@ function UIController() {
     let boardElement = document.querySelector('.gameboard')
     let playerOneName = prompt('Type the 1st Player name Here', '')
     let playerTwoName = prompt('Type the 2nd Player name Here', '');
-    let game = gameController(playerOneName,playerTwoName);
+    let game = gameController(playerOneName, playerTwoName);
+    let validAISelection = true;
 
     let updateScreen = () => {
 
@@ -237,21 +238,8 @@ function UIController() {
         game.playRound(selectedRow, selectedColumn);
         updateScreen();
         if(playerTwoName === 'Computer'){
-            selectedColumn = Math.floor(Math.random() * 3);
-            selectedRow = Math.floor(Math.random() * 3)
-            if(game.getBoard()[selectedRow][selectedColumn].getValue() === ''){
-                game.playRound(selectedRow, selectedColumn);
-                updateScreen();
-            }
-            else{
-                while(game.getBoard()[selectedRow][selectedColumn].getValue() !== ''){
-                    selectedColumn = Math.floor(Math.random() * 3);
-                    selectedRow = Math.floor(Math.random() * 3)
-                }
-                game.playRound(selectedRow, selectedColumn);
-                updateScreen();
-            }
-            console.log(game.getBoard()[selectedRow][selectedColumn].getValue(),selectedRow,selectedColumn)
+            ComputerSelection(selectedColumn, selectedRow, game, validAISelection);
+            updateScreen();
         }
     })
 
@@ -263,37 +251,53 @@ function UIController() {
             updateScreen();
         }
         /** Additionally gives option to change name with resets */
-        if(e.target.classList.contains('restart') || e.target.classList.contains('human')){
+        if (e.target.classList.contains('restart') || e.target.classList.contains('human')) {
             game.resetGame();
             playerOneName = '';
             playerTwoName = '';
             playerOneName = prompt('Type the 1st Player name Here', '')
             playerTwoName = prompt('Type the 2nd Player name Here', '')
-            if(playerOneName.trim() === '' || playerTwoName.trim() === ''){
+            if (playerOneName.trim() === '' || playerTwoName.trim() === '') {
                 alert('Invalid Input')
                 location.reload()
             }
-            game = gameController(playerOneName,playerTwoName)
+            game = gameController(playerOneName, playerTwoName)
             updateScreen();
         }
     })
 
     /** Handles names reset upon click of computer button */
-    document.querySelector('.computer').addEventListener('click' , () => {
+    document.querySelector('.computer').addEventListener('click', () => {
         game.resetGame();
         playerOneName = '';
         playerTwoName = 'Computer';
         playerOneName = prompt('Type the 1st Player name Here', '')
-        if(playerOneName.trim() === ''){
+        if (playerOneName.trim() === '') {
             alert('Invalid Input')
             location.reload()
         }
-        game = gameController(playerOneName,playerTwoName)
+        game = gameController(playerOneName, playerTwoName)
         updateScreen();
     })
-    
+
 
     updateScreen();
+}
+
+function ComputerSelection(selectedColumn, selectedRow, gameControl, validity) {
+    selectedColumn = Math.floor(Math.random() * 3);
+    selectedRow = Math.floor(Math.random() * 3)
+    if (gameControl.getBoard()[selectedRow][selectedColumn].getValue() === '') {
+        gameControl.playRound(selectedRow, selectedColumn);
+        // validity = true
+    }
+    else {
+        selectedColumn = Math.floor(Math.random() * 3);
+        selectedRow = Math.floor(Math.random() * 3)
+        ComputerSelection(selectedColumn, selectedRow, gameControl)
+        // validity = false;
+    }
+    console.log(gameControl.getBoard()[selectedRow][selectedColumn].getValue(), selectedRow, selectedColumn)
 }
 
 
