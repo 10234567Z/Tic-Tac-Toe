@@ -42,7 +42,7 @@ function cell() {
 
 function gameController(playerOneName , playerTwoName) {
     /** If the names are valid continue , if not then reload */
-    if (playerOneName.trim() !== '' || playerTwoName.trim() !== '') {
+    if (playerOneName.trim() !== '' && playerTwoName.trim() !== '' && playerOneName !== playerTwoName) {
         let board = gameboard();
 
         let players = [
@@ -182,7 +182,7 @@ function gameController(playerOneName , playerTwoName) {
         }
     }
     else{
-        alert('Invalid Input')
+        alert('Same or empty names for both players is not acceptable.')
         location.reload();
     }
 }
@@ -231,12 +231,28 @@ function UIController() {
     boardElement.addEventListener('click', e => {
         let selectedColumn = e.target.dataset.column;
         let selectedRow = e.target.dataset.row;
-        console.log('clicked')
 
         if (!selectedColumn || !selectedRow) return;
 
         game.playRound(selectedRow, selectedColumn);
         updateScreen();
+        if(playerTwoName === 'Computer'){
+            selectedColumn = Math.floor(Math.random() * 3);
+            selectedRow = Math.floor(Math.random() * 3)
+            if(game.getBoard()[selectedRow][selectedColumn].getValue() === ''){
+                game.playRound(selectedRow, selectedColumn);
+                updateScreen();
+            }
+            else{
+                while(game.getBoard()[selectedRow][selectedColumn].getValue() !== ''){
+                    selectedColumn = Math.floor(Math.random() * 3);
+                    selectedRow = Math.floor(Math.random() * 3)
+                }
+                game.playRound(selectedRow, selectedColumn);
+                updateScreen();
+            }
+            console.log(game.getBoard()[selectedRow][selectedColumn].getValue(),selectedRow,selectedColumn)
+        }
     })
 
     /** When clicked anywhere on winner message div or other specified buttons , it resets game */
@@ -279,6 +295,8 @@ function UIController() {
 
     updateScreen();
 }
+
+
 
 
 UIController();
