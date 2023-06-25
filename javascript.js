@@ -192,11 +192,11 @@ function UIController() {
     let playerTwoName = prompt('Type the 2nd Player name Here', '');
     let game = gameController(playerOneName, playerTwoName);
     let validAISelection = true;
+    let cellsAvailable = 0;
 
     let updateScreen = () => {
 
         /** Just printing a board and taking values from 2d board */
-        let cellsAvailable = 0;
         let board = game.getBoard();
         boardElement.textContent = '';
         board.forEach((row, rowIndex) => {
@@ -237,7 +237,7 @@ function UIController() {
 
         game.playRound(selectedRow, selectedColumn);
         updateScreen();
-        if(playerTwoName === 'Computer' && game.getWinCheck() === false){
+        if(playerTwoName === 'Computer' && game.getWinCheck() === false && cellsAvailable !== 0){
             ComputerSelection(selectedColumn, selectedRow, game, validAISelection);
             updateScreen();
         }
