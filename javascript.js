@@ -197,6 +197,7 @@ function UIController() {
     let updateScreen = () => {
 
         /** Just printing a board and taking values from 2d board */
+        cellsAvailable = 0;
         let board = game.getBoard();
         boardElement.textContent = '';
         board.forEach((row, rowIndex) => {
@@ -237,6 +238,8 @@ function UIController() {
 
         game.playRound(selectedRow, selectedColumn);
         updateScreen();
+
+        /** If the player 2 is computer , no one has won and cells are available call the following functions */
         if(playerTwoName === 'Computer' && game.getWinCheck() === false && cellsAvailable !== 0){
             ComputerSelection(selectedColumn, selectedRow, game, validAISelection);
             updateScreen();
@@ -285,6 +288,7 @@ function UIController() {
 }
 
 function ComputerSelection(selectedColumn, selectedRow, gameControl, validity) {
+    /** Defines random into the variables , if the indexes are filled already then it performs a recursive function until it is valid*/
     selectedColumn = Math.floor(Math.random() * 3);
     selectedRow = Math.floor(Math.random() * 3)
     if (gameControl.getBoard()[selectedRow][selectedColumn].getValue() === '') {
@@ -297,7 +301,6 @@ function ComputerSelection(selectedColumn, selectedRow, gameControl, validity) {
         ComputerSelection(selectedColumn, selectedRow, gameControl)
         // validity = false;
     }
-    console.log(gameControl.getBoard()[selectedRow][selectedColumn].getValue(), selectedRow, selectedColumn)
 }
 
 
