@@ -237,7 +237,7 @@ function UIController() {
 
         game.playRound(selectedRow, selectedColumn);
         updateScreen();
-        if(playerTwoName === 'Computer'){
+        if(playerTwoName === 'Computer' && game.getWinCheck() === false){
             ComputerSelection(selectedColumn, selectedRow, game, validAISelection);
             updateScreen();
         }
