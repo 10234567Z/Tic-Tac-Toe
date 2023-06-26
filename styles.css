@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -6,13 +6,98 @@
     font-family: 'Kanit', sans-serif;
 }
 
-.gameboard{
+.container {
     display: grid;
-    grid-template-columns: repeat(3 , 150px);
-    grid-template-rows: repeat(3 , 150px);
+    grid-template-rows: fit-content(300px) auto;
 }
 
-.cell{
+.controller {
+    display: grid;
+    grid-template-columns: fit-content(500px) auto;
+    justify-content: start;
+    gap: 130px;
+}
+
+.controlButtons {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: center;
+    align-content: center;
+    gap: 5px;
+    font-size: 40px;
+}
+
+h1 {
+    position: relative;
+    font-size: 4rem;
+}
+
+.controlButtons>button {
+    color: #001CFF;
+    line-height: 19px;
+    font-size: 0.5em;
+    padding: 13px;
+    border-radius: 10px;
+    font-weight: normal;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    background-image: linear-gradient(to right, rgb(97, 164, 9) 0%, rgb(91, 203, 82) 50%, rgb(0, 117, 25) 100%);
+    box-shadow: rgba(0, 0, 0, 0) -100px -100px 15px 5px;
+    border: 2px solid rgb(28, 110, 164);
+    display: inline-block;
+}
+
+.controlButtons>button:hover {
+    background: #61A409;
+}
+
+.controlButtons>button:active {
+    background: #007519;
+}
+
+.gameboard {
+    display: grid;
+    grid-template-columns: repeat(3, 150px);
+    grid-template-rows: repeat(3, 150px);
+    justify-self: center;
+    margin: 35px;
+    padding: 10px;
+    border: 3px ridge #5D4844;
+}
+
+.restart {
+    width: 200px;
+    height: 50px;
+    color:brown;
+    font-size: 1.4rem;
+    line-height: 19px;
+    padding: 13px;
+    border-radius: 10px;
+    font-weight: normal;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    background-image: linear-gradient(to right, rgb(97, 164, 9) 0%, rgb(91, 203, 82) 50%, rgb(0, 117, 25) 100%);
+    box-shadow: rgba(0, 0, 0, 0) -100px -100px 15px 5px;
+    border: 2px solid rgb(28, 110, 164);
+    display: inline-block;
+    justify-self: center;
+}
+
+.restart:hover {
+    background: #61A409;
+}
+
+.restart:active {
+    background: #007519;
+}
+
+.cell {
     background-color: white;
     outline: none !important;
     border: 3px solid black;
@@ -20,23 +105,31 @@
     font-size: xx-large;
 }
 
-.cell:nth-child(2),.cell:nth-child(1),.cell:nth-child(3){
+.cell:nth-child(2),
+.cell:nth-child(1),
+.cell:nth-child(3) {
     border-top: none;
 }
 
-.cell:nth-child(4),.cell:nth-child(1),.cell:nth-child(7){
+.cell:nth-child(4),
+.cell:nth-child(1),
+.cell:nth-child(7) {
     border-left: none;
 }
 
-.cell:nth-child(6),.cell:nth-child(3),.cell:nth-child(9){
+.cell:nth-child(6),
+.cell:nth-child(3),
+.cell:nth-child(9) {
     border-right: none;
 }
 
-.cell:nth-child(8),.cell:nth-child(7),.cell:nth-child(9){
+.cell:nth-child(8),
+.cell:nth-child(7),
+.cell:nth-child(9) {
     border-bottom: none;
 }
 
-.winnerMessage{
+.winnerMessage {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

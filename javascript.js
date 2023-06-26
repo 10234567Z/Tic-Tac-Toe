@@ -42,7 +42,9 @@ function cell() {
 
 function gameController(playerOneName, playerTwoName) {
     /** If the names are valid continue , if not then reload */
-    if (playerOneName.trim() !== '' && playerTwoName.trim() !== '' && playerOneName !== playerTwoName) {
+    if (playerOneName.trim() !== '' && playerTwoName.trim() !== '' &&
+        playerOneName !== playerTwoName ||
+        playerOneName.trim() !== null && playerTwoName.trim() !== null) {
         let board = gameboard();
 
         let players = [
@@ -96,46 +98,7 @@ function gameController(playerOneName, playerTwoName) {
             let diagonalRowT2L = []
             let diagonalRowT2R = []
 
-            for (i = 0; i < 3; i++) {
-                for (j = 0; j < 3; j++) {
-                    /** If rows and columns are same its diagonal is top left to right , like 1,1 ; 2,2 would all be next to each other diagonally */
-                    if (i === j) {
-                        diagonalRowT2R.push(board.getBoard()[i][j].getValue())
-                    }
-                    /** (-1 is only for it to not go more than 2 i.e highest index) 
-                     *  0  1  2
-                     * |     ij| 0
-                     * |   ij  | 1
-                     * |ij_____| 2
-                     * in this above diagram i can be said as 3 - j - 1
-                     */
-                    if (i === 3 - j - 1) {
-                        diagonalRowT2L.push(board.getBoard()[i][j].getValue())
-                    }
-
-                    /** Next 3 if satements check on the different row indexes and horizontals indexes by checking all 3 rows individually */
-                    if (i === 0) {
-                        horizontalCheck1.push(board.getBoard()[i][j].getValue())
-                    }
-                    if (i === 1) {
-                        horizontalCheck2.push(board.getBoard()[i][j].getValue())
-                    }
-                    if (i === 2) {
-                        horizontalCheck3.push(board.getBoard()[i][j].getValue())
-                    }
-
-                    /** Next 3 if satements check on the different col indexes and vertical indexes by checking all 3 cols individually */
-                    if (j === 0) {
-                        verticalCheck1.push(board.getBoard()[i][j].getValue())
-                    }
-                    if (j === 1) {
-                        verticalCheck2.push(board.getBoard()[i][j].getValue())
-                    }
-                    if (j === 2) {
-                        verticalCheck3.push(board.getBoard()[i][j].getValue())
-                    }
-                }
-            }
+            WinChecker(board, horizontalCheck1, horizontalCheck2, horizontalCheck3, verticalCheck1, verticalCheck2, verticalCheck3, diagonalRowT2L, diagonalRowT2R);
 
             /** Push all the checksinside a single array */
             let allChecks = [];
@@ -188,8 +151,10 @@ function gameController(playerOneName, playerTwoName) {
 }
 function UIController() {
     let boardElement = document.querySelector('.gameboard')
-    let playerOneName = prompt('Type the 1st Player name Here', '')
-    let playerTwoName = prompt('Type the 2nd Player name Here', '');
+    // let playerOneName = prompt('Type the 1st Player name Here', '')
+    // let playerTwoName = prompt('Type the 2nd Player name Here', '');
+    let playerOneName = "1";
+    let playerTwoName = "2";
     let game = gameController(playerOneName, playerTwoName);
     let validAISelection = true;
     let cellsAvailable = 0;
@@ -240,7 +205,7 @@ function UIController() {
         updateScreen();
 
         /** If the player 2 is computer , no one has won and cells are available call the following functions */
-        if(playerTwoName === 'Computer' && game.getWinCheck() === false && cellsAvailable !== 0){
+        if (playerTwoName === 'Computer' && game.getWinCheck() === false && cellsAvailable !== 0) {
             ComputerSelection(selectedColumn, selectedRow, game, validAISelection);
             updateScreen();
         }
@@ -293,17 +258,55 @@ function ComputerSelection(selectedColumn, selectedRow, gameControl, validity) {
     selectedRow = Math.floor(Math.random() * 3)
     if (gameControl.getBoard()[selectedRow][selectedColumn].getValue() === '') {
         gameControl.playRound(selectedRow, selectedColumn);
-        // validity = true
     }
     else {
         selectedColumn = Math.floor(Math.random() * 3);
         selectedRow = Math.floor(Math.random() * 3)
         ComputerSelection(selectedColumn, selectedRow, gameControl)
-        // validity = false;
     }
 }
 
 
+function WinChecker(board, horizontalCheck1, horizontalCheck2, horizontalCheck3, verticalCheck1, verticalCheck2, verticalCheck3, diagonalRowT2L, diagonalRowT2R) {
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            /** If rows and columns are same its diagonal is top left to right , like 1,1 ; 2,2 would all be next to each other diagonally */
+            if (i === j) {
+                diagonalRowT2R.push(board.getBoard()[i][j].getValue())
+            }
+            /** (-1 is only for it to not go more than 2 i.e highest index) 
+             *  0  1  2
+             * |     ij| 0
+             * |   ij  | 1
+             * |ij_____| 2
+             * in this above diagram i can be said as 3 - j - 1
+             */
+            if (i === 3 - j - 1) {
+                diagonalRowT2L.push(board.getBoard()[i][j].getValue())
+            }
 
+            /** Next 3 if satements check on the different row indexes and horizontals indexes by checking all 3 rows individually */
+            if (i === 0) {
+                horizontalCheck1.push(board.getBoard()[i][j].getValue())
+            }
+            if (i === 1) {
+                horizontalCheck2.push(board.getBoard()[i][j].getValue())
+            }
+            if (i === 2) {
+                horizontalCheck3.push(board.getBoard()[i][j].getValue())
+            }
 
+            /** Next 3 if satements check on the different col indexes and vertical indexes by checking all 3 cols individually */
+            if (j === 0) {
+                verticalCheck1.push(board.getBoard()[i][j].getValue())
+            }
+            if (j === 1) {
+                verticalCheck2.push(board.getBoard()[i][j].getValue())
+            }
+            if (j === 2) {
+                verticalCheck3.push(board.getBoard()[i][j].getValue())
+            }
+        }
+    }
+}
 UIController();
