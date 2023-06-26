@@ -235,9 +235,7 @@ function UIController() {
     /** Handles names reset upon click of computer button */
     document.querySelector('.computer').addEventListener('click', () => {
         game.resetGame();
-        playerOneName = '';
         playerTwoName = 'Computer';
-        playerOneName = prompt('Type the 1st Player name Here', '')
         game = gameController(playerOneName, playerTwoName)
         updateScreen();
     })
