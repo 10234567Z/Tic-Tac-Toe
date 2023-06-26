@@ -42,9 +42,11 @@ function cell() {
 
 function gameController(playerOneName, playerTwoName) {
     /** If the names are valid continue , if not then reload */
-    if (playerOneName.trim() !== '' && playerTwoName.trim() !== '' &&
-        playerOneName !== playerTwoName ||
-        playerOneName.trim() !== null && playerTwoName.trim() !== null) {
+    if (playerOneName !== null || playerTwoName !== null) { 
+        if(playerOneName.trim() === '' || playerTwoName.trim() === '' || playerOneName === playerTwoName){
+            alert('Same or empty names for both players is not acceptable.')
+            location.reload();
+        }
         let board = gameboard();
 
         let players = [
@@ -151,10 +153,10 @@ function gameController(playerOneName, playerTwoName) {
 }
 function UIController() {
     let boardElement = document.querySelector('.gameboard')
-    // let playerOneName = prompt('Type the 1st Player name Here', '')
-    // let playerTwoName = prompt('Type the 2nd Player name Here', '');
-    let playerOneName = "1";
-    let playerTwoName = "2";
+    let playerOneName = prompt('Type the 1st Player name Here', '')
+    let playerTwoName = prompt('Type the 2nd Player name Here', '');
+    // let playerOneName = "1";
+    // let playerTwoName = "2";
     let game = gameController(playerOneName, playerTwoName);
     let validAISelection = true;
     let cellsAvailable = 0;
@@ -225,10 +227,6 @@ function UIController() {
             playerTwoName = '';
             playerOneName = prompt('Type the 1st Player name Here', '')
             playerTwoName = prompt('Type the 2nd Player name Here', '')
-            if (playerOneName.trim() === '' || playerTwoName.trim() === '') {
-                alert('Invalid Input')
-                location.reload()
-            }
             game = gameController(playerOneName, playerTwoName)
             updateScreen();
         }
@@ -240,10 +238,6 @@ function UIController() {
         playerOneName = '';
         playerTwoName = 'Computer';
         playerOneName = prompt('Type the 1st Player name Here', '')
-        if (playerOneName.trim() === '') {
-            alert('Invalid Input')
-            location.reload()
-        }
         game = gameController(playerOneName, playerTwoName)
         updateScreen();
     })
