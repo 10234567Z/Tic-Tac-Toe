@@ -16,17 +16,18 @@
     grid-template-columns: fit-content(500px) auto;
     justify-content: start;
     gap: 130px;
+    margin: 15px;
 }
 
 .controlButtons {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    flex: 1;
     justify-content: center;
     align-content: center;
     gap: 5px;
     font-size: 40px;
+    width: 100%;
 }
 
 h1 {
@@ -35,6 +36,7 @@ h1 {
 }
 
 .controlButtons>button {
+    flex: 1;
     color: #001CFF;
     line-height: 19px;
     font-size: 0.5em;
@@ -62,8 +64,9 @@ h1 {
 .gameboard {
     display: grid;
     grid-template-columns: repeat(3, 150px);
-    grid-template-rows: repeat(3, 150px);
+    grid-template-rows: repeat(3,150px);
     justify-self: center;
+    align-self: center;
     margin: 35px;
     padding: 10px;
     border: 3px ridge #5D4844;
@@ -142,4 +145,48 @@ h1 {
     opacity: 0.8;
     background-color: white;
     font-size: 50px;
+}
+
+@media screen and (max-width: 680px) {
+    h1{
+        font-size: 3rem;
+    }
+    .controlButtons{
+        font-size: 2rem;
+    }
+    .controlButtons>button{
+        padding: 7px;
+    }
+    .gameboard{
+        grid-template-columns: repeat(3, 100px);
+        grid-template-rows: repeat(3,100px);
+    }
+    .controller{
+        gap: 70px;
+    }
+}
+
+@media screen and (max-width: 548px) {
+    .controller{
+        gap: 20px;
+    }
+    h1{
+        font-size: 30px;
+    }
+    .controlButtons{
+        font-size: 1rem;
+    }
+    .controlButtons>button{
+        padding: 3px;
+        font-size: .5em;
+        height: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+    }
+    .gameboard{
+        grid-template-columns: repeat(3, 70px);
+        grid-template-rows: repeat(3,70px);
+    }
 }

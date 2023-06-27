@@ -153,10 +153,10 @@ function gameController(playerOneName, playerTwoName) {
 }
 function UIController() {
     let boardElement = document.querySelector('.gameboard')
-    let playerOneName = prompt('Type the 1st Player name Here', '')
-    let playerTwoName = prompt('Type the 2nd Player name Here', '');
-    // let playerOneName = "1";
-    // let playerTwoName = "2";
+    // let playerOneName = prompt('Type the 1st Player name Here', '')
+    // let playerTwoName = prompt('Type the 2nd Player name Here', '');
+    let playerOneName = "1";
+    let playerTwoName = "2";
     let game = gameController(playerOneName, playerTwoName);
     let validAISelection = true;
     let cellsAvailable = 0;
